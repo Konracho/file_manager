@@ -1,8 +1,6 @@
 import os
 import sys
 
-os.chdir('./module/root_folder')
-
 def ls_lh(size):
     # size = os.stat(filename).st_size
 
@@ -33,7 +31,7 @@ def file_manager():
             except:
                 pass
             new_dir = os.getcwd()
-            one_dir = new_dir.rindex("/")
+            one_dir = new_dir.rindex("\\")
             print(new_dir[(one_dir + 1):])
 
         elif command.startswith("ls"):
