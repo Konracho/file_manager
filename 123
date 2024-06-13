@@ -1,0 +1,76 @@
+import os
+import sys
+
+os.chdir('./module/root_folder')
+
+def ls_lh(size):
+    # size = os.stat(filename).st_size
+
+    if size < 1024:
+        return f'{size}B'
+    elif size < 2 ** 20:
+        return f'{round(size / 1024)}KB'
+    elif size < 2 ** 30:
+        return f'{round(size / 2 ** 20)}MB'
+    elif size < 2 ** 40:
+        return f'{round(size / 2 ** 30)}GB'
+
+def file_manager():
+    print("Input the command")
+    while True:
+        command = input()
+        if command == 'pwd':
+            print(os.getcwd())
+        elif command == 'cd ..':
+            os.chdir('..')
+            print(os.getcwd())
+        elif command == 'cd':
+            print('Invalid command')
+
+        elif command.startswith("cd"):
+            try:
+                os.chdir(command[3:])
+            except:
+                pass
+            new_dir = os.getcwd()
+            one_dir = new_dir.rindex("/")
+            print(new_dir[(one_dir + 1):])
+
+        elif command.startswith("ls"):
+            try:
+                os.chdir(command[3:])
+            except:
+                for dirpatch, dirmanes, filenames in os.walk('.'):
+                    for dirmane in dirmanes:
+                        print(os.path.join(dirpatch, dirmane))
+                    for filename in filenames:
+                        print(os.path.join(dirpatch, filename))
+
+            if command == "ls -l":
+                for dirpatch, dirmanes, filenames in os.walk('.'):
+                    for dirmane in dirmanes:
+                        print(os.path.join(dirpatch, dirmane))
+                    for filename in filenames:
+                        size = os.stat(filename).st_size
+                        print(f'{filename} {size}')
+                        
+            if command == "ls -lh":
+                for dirpatch, dirmanes, filenames in os.walk('.'):
+                    for dirmane in dirmanes:
+                        print(os.path.join(dirpatch, dirmane))
+                    for filename in filenames:
+                        full_path = os.path.join(os.getcwd(), filename)
+                        if os.path.isfile(full_path):
+                            print(f"{filename} {ls_lh(os.stat(filename).st_size)}")
+                        elif os.path.isdir(full_path):
+                            print(filename)
+                        else:
+                            pass
+
+        elif command == 'quit':
+            sys.exit()
+
+        else:
+            print('Invalid command')
+
+file_manager()
